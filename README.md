@@ -9,8 +9,19 @@ Currently, these are the app installed:
 * Media Center (let you play OMXPlayer videos)
 * File Manager (let you upload and download from the web)
 
-## Warning: This is a prototype and may have security problems, this is the todo list:
+#### Warning: This is a prototype and may have security problems, this is the todo list:
 
 * HTTPS
 * web login
-* 
+ 
+ 
+# Usage:
+
+In the Raspberry execute:
+
+	python RPCServer.py
+
+In your favorite browser go to
+
+	http://ip_of_yor_pi/
+
