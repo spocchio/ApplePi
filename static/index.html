@@ -1,0 +1,43 @@
+<html>                                                                  
+ <head>                                                                  
+ <script type="text/javascript" src="jquery-1.9.1.min.js"></script>          
+ <script type="text/javascript" src="rpcberry.js"></script>          
+ <script src="jqueryFileTree.js" type="text/javascript"></script>
+ <link href="jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
+
+ <script type="text/javascript">                                         
+    $(document).ready(function() {
+    loadAppManager();
+ });
+ </script>                                                               
+<style media="screen" >
+
+ .modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+body.loading {    overflow: hidden;   }
+body.loading .modal {    display: block;}
+ </style>
+ </head>                                                                 
+ <body>                                                                  
+   <div id="AppManager">
+	   <ul id="AppManagerUl"></ul>
+   </div>
+   
+	<div id="app">
+	
+	
+   </div>
+   <div class="modal"></div>
+ </body>                                                                 
+ </html>
