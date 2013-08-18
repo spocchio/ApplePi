@@ -9,12 +9,12 @@ import select
 
 class FileManager(WebApp.WebApp):
 	isHTML=True
-        
+	mediadir = os.path.expanduser('~')        
 	def handle(self,mfile=None,nome=None, action=None,nfile=None):
-		
+		mediadir = self.mediadir	
 		if action=='Download this' and mfile != None:
-			with  open('media'+mfile) as f:
-				web.header('Content-Disposition', 'attachment; filename="'+os.path.basename(mfile)+'"')
+			with  open(self.mediadir+mfile) as f:
+				web.header('Content-Disposition', 'attachment; filename="' + os.path.basename(mfile) + '"')
 				while True:
 					data = f.read(1024)
 					if not data:
@@ -26,14 +26,15 @@ class FileManager(WebApp.WebApp):
 			if action=='Rename to' and mfile != None and nome!=None:
 				
 				dest = os.path.dirname(mfile) +nome
-				os.rename('media'+mfile,'media'+dest)
+				os.rename(mediadir+mfile,mediadir+dest)
 				yield '  folder/file '+mfile+' renamed to ! '+dest
 			elif action=='Remove this' and mfile != None:
-				os.remove('media'+mfile)
+				os.remove(mediadir+mfile)
 				yield '  folder/file '+mfile+' removed! '
 			elif action=='Upload here' and mfile != None and nfile!=None:
-				
-				dest = 'media'+os.path.dirname(mfile) +'/' +nfile['filename']
+				print 'nfile:'
+				print nfile
+				dest = mediadir+os.path.dirname(mfile) +'/' +nfile['filename']
 				os.rename(nfile['path'],dest)
 				print (nfile['path'],dest)
 				yield str(nfile)+' uploaded on '+str(mfile)+'!'

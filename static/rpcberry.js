@@ -111,7 +111,7 @@ function readHTML(method,parameters,ele,f){
 						link3.data('id',id);
 						link3.click(function(me){
 								loading()
-								callJSON('AppManager','','close',{'app':link3.data('name'),'id':link3.data('id')}, function(id){ 
+								callJSON(link3.data('name'),link3.data('id'),'close',{'app':link3.data('name'),'id':link3.data('id')}, function(id){ 
 									loadApp('AppManager','','HTML')
 								});
 								

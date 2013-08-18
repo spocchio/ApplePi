@@ -1,4 +1,4 @@
-import web 
+import web
 
 import re
 import cgi
@@ -15,10 +15,14 @@ import random
 class Shell(WebApp.WebApp):
 	isHTML=True
 	keepInstance=True
-	def close(self):
+	def close(self,app,id):
 		if 'pipe' in self.data:
-			try: self.data['pipe'].close()
-			except: self.data['out'] += '\n Error closing pipe\n'
+			try: 
+				self.data['pipe'].kill()
+			except: 
+				self.data['out'] += '\n Error closing pipe\n'
+		del WebApp.selfies[app][id]
+		return '""'
 	def send(self,cs):
 		if 'pipe' in self.data:
 			for c in cs:
@@ -39,6 +43,7 @@ class Shell(WebApp.WebApp):
 			self.data['out']=''
 			self.data['diff']=''
 			#self.data['outFile']='tmp/typeScript.'+str(random.random())
+			#try: self.data['pipe'] = subprocess.Popen(["script","-f","-q","-c","bash -i"],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 			try: self.data['pipe'] = subprocess.Popen(["script","-f","-q","-c","bash -i"],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 			except: self.data['out'] += '\n Error opening pipe\n'
 
@@ -48,7 +53,7 @@ class Shell(WebApp.WebApp):
 		try:
 			if(c!=None): self.send(cs=c)
 			self.data['diff'] = ''
-			print 'select',select.select([p.stdout],[],[],0)[0]!=[]
+			#print 'select',select.select([p.stdout],[],[],0)[0]!=[]
 			while select.select([p.stdout],[],[],0)[0]!=[] or select.select([p.stderr],[],[],0)[0]!=[]:
 				if(select.select([p.stdout],[],[],0)[0]!=[]): self.data['diff']+=p.stdout.read(1)
 				if(select.select([p.stderr],[],[],0)[0]!=[]): self.data['diff']+=p.stderr.read(1)
@@ -62,43 +67,54 @@ class Shell(WebApp.WebApp):
 		return self.data['diff']
 	def getHTML(self,c=None):
 		dato = self.get(c)
-		print 'dato',dato
+		#print 'dato',dato
 		return deansi(dato)
 	def getDiffHTML(self,c=None):
 		dato = self.getDiff(c=c)
-		print 'dato',dato
+		#print 'dato',dato
 		return deansi(dato)
 	def HTML(self,c=None):
 		return """
 			<style>
 			#scatola { background-color: #222; color: #cfc; 
 			width:100%;
-			height:100%;
+			height:90%;
 			overflow: scroll;
 			} 
+//			input { height:8%}
 			"""+styleSheet()+"""
 			</style>
 
 			<pre id="scatola" contenteditable="true">"""+deansi(self.get())+"""</pre>
+			<input type=text id="raw" placeholder="paste here"   /><input type="submit" id="sendRaw" value="send"/>(or just type in the black box)
 			<script>
+				$('#sendRaw').click(function(e){
+					readHTML('send', {'cs':$('#raw').val() },null)					
+				})
 				$('#scatola')[0].sposta = function(){
 										lc = $('#scatola :last-child')
-										console.log(lc)
-										placeCaretAtEnd(lc.get(0));
-										console.log(lc.get(0))
+										//onsole.log('lc.get0')
+										//console.log(lc.get(0))
+										//console.log('parentame')
+										//console.log(document.activeElement)
+						
+										if(document.activeElement == lc.parent().get(0)){
+											placeCaretAtEnd(lc.get(0));
+										}
+										//console.log(lc.parent().get(0))
 									    $('#scatola').scrollTop($('#scatola')[0].scrollHeight);
 
 						}
 				reloadEvery(currentApp,currentId,'getHTML',{},'#scatola',1000,$('#scatola')[0].sposta)
 				$('#scatola').keydown(function(e) {
-					console.log(e)
+					//console.log(e)
 					code = e.keyCode
 					if(code==8) {
 						readHTML('send',{'cs': String.fromCharCode(8)},null)
 					}
 				})
 				$('#scatola').keypress(function(e){
-					console.log(e)
+					//console.log(e)
 					code = e.keyCode
 					if(code==13) {
 					 code=10
