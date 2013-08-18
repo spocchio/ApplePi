@@ -1,11 +1,13 @@
 {
 	"port":80,
 	"ssl":{
+		"enabled": true,
 		"certificate":"server.crt",
 		"private":"server.key"
 	},
 	"auth":{
+		"enabled": true,
 		"user":"pi",
 		"pass":"gamma"
+	}
 }
-	

@@ -12,7 +12,7 @@ import base64
 selfies = {}
 selfies2 = {}
 
-allowed  = (('user','pass'),)
+allowed  = None
 
 class WebApp:
 	keepInstance=False
@@ -45,18 +45,19 @@ class WebApp:
 	def GET(self,_id,f,forzaParametri = None):
 		auth = web.ctx.env.get('HTTP_AUTHORIZATION')
 		error  = False
-		authreq = False
-		if auth is None: authreq = True
-		else:
-			auth = re.sub('^Basic ','',auth)
-			username,password = base64.decodestring(auth).split(':')
-			print (username,password) , allowed, (username,password)  in allowed
-			if (username,password) not in allowed:
-				authreq = True 
-		if authreq:
-			web.header('WWW-Authenticate','Basic realm="Authorized access only"')
-			web.ctx.status = '401 Unauthorized'
-			error =  True
+		if allowed != None:
+			authreq = False
+			if auth is None: authreq = True
+			else:
+				auth = re.sub('^Basic ','',auth)
+				username,password = base64.decodestring(auth).split(':')
+				print (username,password) , allowed, (username,password)  in allowed
+				if (username,password) not in allowed:
+					authreq = True 
+			if authreq:
+				web.header('WWW-Authenticate','Basic realm="Authorized access only"')
+				web.ctx.status = '401 Unauthorized'
+				error =  True
 		cname = self.__class__.__name__
 		if(self.keepInstance):
 			if cname not in selfies: selfies[cname]={}

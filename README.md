@@ -14,14 +14,17 @@ All apps have:
 * Basic authentication
 * possible HTTPS connection
  
-# Installation:
+## Installation:
 
-you should installthe `web` python package, put ssl certificate files as `server.crt` and `server.key`, and modify the user/password pair in the `config.json` file.
-Or just run
+you should installthe `web` python package, or just run
 
 	bash setup.bash
 
-# Usage:
+This will also set up the local/public pair key for the SSL connection. For HTTPS you need the pyOpenSSL package.
+
+Please modify the user/password authentication pair in the file `config.json`. 
+
+## Usage:
 
 In the Raspberry execute:
 
@@ -29,5 +32,6 @@ In the Raspberry execute:
 
 In your favorite browser go to
 
-	https://ip_of_yor_pi/
+	http://ip_of_yor_pi/
 
+The default user is `pi` with password `gamma`

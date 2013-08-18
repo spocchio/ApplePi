@@ -6,9 +6,11 @@ from web.wsgiserver import CherryPyWSGIServer
 
 # load configuration
 config = json.loads(file('config.json').read())
-CherryPyWSGIServer.ssl_certificate = config['ssl']['certificate']
-CherryPyWSGIServer.ssl_private_key = config['ssl']['private']
-WebApp.allowed = ((config["auth"]["user"],auth["auth"]["pass"]),)
+if(config['ssl']['enabled']):
+	CherryPyWSGIServer.ssl_certificate = config['ssl']['certificate']
+	CherryPyWSGIServer.ssl_private_key = config['ssl']['private']
+if(config['auth']['enabled']):
+	WebApp.allowed = ((config["auth"]["user"],config["auth"]["pass"]),)
 
 #config redirection to the static folder
 urls = ['/', 'redirect']
