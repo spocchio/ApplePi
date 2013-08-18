@@ -7,21 +7,27 @@ Currently, these are the app installed:
 * a basic System Monitor (temperature, cpu usage ecc..)
 * web Shell
 * Media Center (let you play OMXPlayer videos)
-* File Manager (let you upload and download from the web)
+* File Manager (let you upload and download from the web
 
-#### Warning: This is a prototype and may have security problems, this is the todo list:
+All apps have:
 
-* HTTPS
-* web login
+* Basic authentication
+* possible HTTPS connection
  
- 
+# Installation:
+
+you should installthe `web` python package, put ssl certificate files as `server.crt` and `server.key`, and modify the user/password pair in the `config.json` file.
+Or just run
+
+	bash setup.bash
+
 # Usage:
 
 In the Raspberry execute:
 
-	python RPCServer.py
+	python ApplePi.py
 
 In your favorite browser go to
 
-	http://ip_of_yor_pi/
+	https://ip_of_yor_pi/
 
