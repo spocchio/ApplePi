@@ -1,7 +1,7 @@
 {
 	"port":80,
 	"ssl":{
-		"enabled": true,
+		"enabled": false,
 		"certificate":"server.crt",
 		"private":"server.key"
 	},
