@@ -77,16 +77,18 @@ function readHTML(method,parameters,ele,f){
 		 console.debug(ress)
 			for (var res in ress){
 				names = ress[res];
-				link = $("<a href='#'>"+res+"</a>");
-				link.data('name',res);
 				
 				if (names==null){
+					link = $("<a href='#'>[o] "+res+"</a>");
+					link.data('name',res);
 					link.click(function(me){
 							loading()
 							loadApp($(this).data('name'),'','HTML')
 					});
 					ol2 = $('<ol></ol>')
 				}else{
+					link = $("<a href='#'>[+] "+res+"</a>");
+					link.data('name',res);
 					link.click(function(me){
 						name = $(this).data('name')
 						callJSON(name,'','',{}, function(id){ 
@@ -98,7 +100,7 @@ function readHTML(method,parameters,ele,f){
 					for (var name in names){
 						id = names[name]
 						il2 = $('<li></li>')
-						link2 = $("<a href='#'>"+id+"</a>");
+						link2 = $("<a href='#'> ["+id+"]</a>");
 						link2.data('name',res);
 						link2.data('id',id);
 						link2.click(function(me){
@@ -106,7 +108,7 @@ function readHTML(method,parameters,ele,f){
 								loadApp($(this).data('name'),$(this).data('id'),'HTML')
 							
 						});
-						link3 = $("<a href='#'> x </a>");
+						link3 = $("<a href='#'> [X] </a>");
 						link3.data('name',res);
 						link3.data('id',id);
 						link3.click(function(me){
@@ -129,6 +131,7 @@ function readHTML(method,parameters,ele,f){
 				li.append(ol2)
 				$('#AppManagerUl').append(li);
 			}
+
 		 })
  }
  function readFrom(ele,classe,method,parameter){
@@ -140,6 +143,7 @@ function reloadEvery(classe,self,method,parmeters,idElem,t,f){
 				readHTML(method,parmeters,idElem,f)
 				if(currentApp == classe && currentId == self){
 					reloadEvery(classe,self,method,parmeters,idElem,t,f)
+					
 				}
 			},t)
 }

@@ -48,4 +48,5 @@ class AppManager(WebApp.WebApp):
 	def instanciable(self,app):
 		return   app in WebApp.selfies and WebApp.selfies[app]!=None
 	def HTML(self):
-		return '<div> <p>Welcome to RPC Berry - Remotely controll your device ;) </p> <p> By Antonio Ragagnin [spocchio@gmail.com] </p></div>'
+		return """<div> <p>Welcome to <strong>ApplePi</strong> - Remotely controll your Pi ;) </p>
+			 <p> Start selecting an application from menu on the left.  </p> """

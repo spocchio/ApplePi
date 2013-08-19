@@ -1,7 +1,14 @@
+#!/usr/bin/python
 import web
 import apps.AppManager
 import WebApp
+import sys
+import threading
+import os
 import json
+import time
+
+
 from web.wsgiserver import CherryPyWSGIServer
 
 # load configuration
@@ -14,9 +21,6 @@ if(config['auth']['enabled']):
 
 #config redirection to the static folder
 urls = ['/', 'redirect']
-class redirect:
-    def GET(self):
-        raise web.seeother('/static/index.html')
 
 #load the applications from the 'apps' folder
 apps = json.loads(apps.AppManager.AppManager().appList())
@@ -34,6 +38,26 @@ for app in apps:
 print 'urls:', urls
 
 if __name__ == "__main__":
-    app = web.application(urls,locals())
-    app.run()
+	# web.py has troubles to stop on the CTRL-C event,
+	# so I have to start it as a thread and to manually catch the 
+	# CTRL-C
+	def startServer():
+		global urls
+		class redirect:
+		    def GET(self):
+		        raise web.seeother('/static/index.html')
+		app = web.application(urls,locals())
+		app.run()
+	t = threading.Thread(target=startServer, args=[])
+	t.start()
+	while True:
+		try:
+			pass
+			time.sleep(1)
+		except KeyboardInterrupt:
+			print 'CTRL+C'
+			os.kill(os.getpid(),9)			
+	        	
+        
+		
 

@@ -36,6 +36,17 @@ class Shell(WebApp.WebApp):
 				
 	def get(self,c=None):
 		self.getDiff(c=c)
+		print 'read:',self.data['out']
+		while self.data['out'].rfind(chr(07)) != -1:
+			pos = self.data['out'].rfind(chr(07))
+			print 'pos',pos
+			pos2 = self.data['out'][:pos].rfind(chr(10))
+			print 'pos2',pos2
+			if(pos2==-1): pos2=0
+			print 'pos2',pos2
+			self.data['out'] = self.data['out'][:pos2+1]+self.data['out'][pos+1:]
+			print 'new read',self.data['out']
+
 		return self.data['out']
 	def getDiff(self,c=None):
 		
@@ -43,6 +54,7 @@ class Shell(WebApp.WebApp):
 			self.data['out']=''
 			self.data['diff']=''
 			#self.data['outFile']='tmp/typeScript.'+str(random.random())
+			#try: self.data['pipe'] = subprocess.Popen(["script","-f","-q","-c","bash -i"],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 			#try: self.data['pipe'] = subprocess.Popen(["script","-f","-q","-c","bash -i"],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 			try: self.data['pipe'] = subprocess.Popen(["script","-f","-q","-c","bash -i"],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 			except: self.data['out'] += '\n Error opening pipe\n'
@@ -55,8 +67,19 @@ class Shell(WebApp.WebApp):
 			self.data['diff'] = ''
 			#print 'select',select.select([p.stdout],[],[],0)[0]!=[]
 			while select.select([p.stdout],[],[],0)[0]!=[] or select.select([p.stderr],[],[],0)[0]!=[]:
-				if(select.select([p.stdout],[],[],0)[0]!=[]): self.data['diff']+=p.stdout.read(1)
-				if(select.select([p.stderr],[],[],0)[0]!=[]): self.data['diff']+=p.stderr.read(1)
+				readed = False
+				if(select.select([p.stdout],[],[],0)[0]!=[]): 
+					data = p.stdout.read(1)
+					if(len(data)>0):
+						self.data['diff']+=data
+						readed = True
+				if(select.select([p.stderr],[],[],0)[0]!=[]):
+					data = p.stdout.read(1)
+					if(len(data)>0):
+						self.data['diff']+=p.stderr.read(1)
+						readed = True
+				if (not readed):
+					break
 		except: self.data['out'] += '\n Error reading pipe \n '
 		self.data['out']+=self.data['diff']
 		"""
