@@ -86,12 +86,15 @@ class OMXPlayer(WebApp.WebApp):
 				pre {background-color: #222; color: #cfc; 
 				width:100%;
 				} 
+				iframe{ border:0;}
 				
 			</style>
 		<article>
-		<h3>OMXPlayer status</h3>
+		<h3>From here you can manage the running OMXPlayer.</h3>
+		<p>Here is shown the OMXPlayer output
 		<pre id="omxout">Loading..</pre>
-		<pre id="omxstatus">Loading..</pre>
+		<pre id="omxstatus">Loading..</pre></p>
+			<p> Here you can send an input to OMXPlayer</p>
 			<button  value="j">[&lt;</button>
 			<button  value="U">&lt;</button>
 			<button  value="R">&lt;</button>
@@ -115,16 +118,24 @@ class OMXPlayer(WebApp.WebApp):
 			<br/>
 			<button  value="z">?</button>
 			<button  value="q">quit</button>
+			
 		</article>
 		<article>
-			<h3> Data Selection </h3>
+			<h3> Here you can choose a file to play with OMXPlayer </h3>
 			<form method="POST"   enctype="multipart/form-data" action="/OMXPlayer//start" target="my_iframe"  >
 				<div id="fileBro"></div>
-				<input type=text placeholder="Click to browse" name=movie onclick='fileBrowserFromHidden(this); return false'>Browse files</button>
-				<input type="checkbox" name="autoSottotitoli">Auto select omonimus srt file (if your omxplayer supports it)</radio>
-				<input type="checkbox" name="hdmi">audio HDMI</radio>
-				<input type="submit">
-
+				<p>
+				First of all <b>click</b> here to choose a media file:
+				<input type=text placeholder="Click to browse" name=movie onclick='fileBrowserFromHidden(this); return false'>
+				</p><p>
+				<input type="checkbox" name="autoSottotitoli">Automatically select the corresponding .srt file (if your omxplayer supports it)</radio>
+				</p>
+				<p>
+				<input type="checkbox" name="hdmi">send audio to HDMI output</radio>
+				</p>
+				<p>
+				<input type="submit" value="Play!">
+				</p>
 			</form>
 			  <iframe name="my_iframe" src="about:blank"></iframe>
 

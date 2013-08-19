@@ -112,15 +112,17 @@ class WebApp:
 					
 					#filename="a"
 					#web.debug(filename)
+					print 'oyee'
 					fout = open(filedir +'/'+ filename,'w') # creates the file where the uploaded file should be stored
 					fout.write(pars[par].file.read()) # writes the uploaded file to the newly created file.
 					fout.close() # closes the file, upload complete.
 					#web.debug (filename)
 					pars2[par]={'path':filedir+'/'+filename,'filename':pars[par].filename}
-					 
-			except:
-				pass	
-#		web.debug('ecc')
+					print 'ayee', pars2[par]	 
+			except AttributeError:
+				pass
+				
+		print 'pars2',pars2
 		for gamma in self.GET(id,f,forzaParametri = pars2):
 			yield gamma
 	def index(self):

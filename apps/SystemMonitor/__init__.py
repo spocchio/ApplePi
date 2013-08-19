@@ -67,7 +67,8 @@ class SystemMonitor(WebApp.WebApp):
 
 
 		
-		res=	"<article><h3>CPU</h3><p><b>Usage</b>:"+str(CPU_usage)+"</p>"
+		res=	"<h2> Here are listed some realtime informations about your Pi</h2>"
+		res+=   "<article><h3>CPU</h3><p><b>Usage</b>:"+str(CPU_usage)+"</p>"
 		res+=	"<p><b>Temperature</b>:"+str(CPU_temp)+"</p></article>"
 		res+=	"<article><h3>Memory</h3><p><b>Total</b>:"+str(RAM_total)+"</p>"
 		res+=	"<p><b>Used</b>:"+str(RAM_used)+"</p>"

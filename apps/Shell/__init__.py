@@ -36,16 +36,16 @@ class Shell(WebApp.WebApp):
 				
 	def get(self,c=None):
 		self.getDiff(c=c)
-		print 'read:',self.data['out']
+		#print 'read:',self.data['out']
 		while self.data['out'].rfind(chr(07)) != -1:
 			pos = self.data['out'].rfind(chr(07))
-			print 'pos',pos
+			#print 'pos',pos
 			pos2 = self.data['out'][:pos].rfind(chr(10))
-			print 'pos2',pos2
+			#print 'pos2',pos2
 			if(pos2==-1): pos2=0
-			print 'pos2',pos2
+			#print 'pos2',pos2
 			self.data['out'] = self.data['out'][:pos2+1]+self.data['out'][pos+1:]
-			print 'new read',self.data['out']
+			#print 'new read',self.data['out']
 
 		return self.data['out']
 	def getDiff(self,c=None):
@@ -107,9 +107,13 @@ class Shell(WebApp.WebApp):
 //			input { height:8%}
 			"""+styleSheet()+"""
 			</style>
-
+			<article>
+			<h3>This is a web shell, type the commands in the black box</h3>
 			<pre id="scatola" contenteditable="true">"""+deansi(self.get())+"""</pre>
-			<input type=text id="raw" placeholder="paste here"   /><input type="submit" id="sendRaw" value="send"/>(or just type in the black box)
+			If you have troubles inserting text (e.g. pasting), try this input: <input type=text id="raw" placeholder="paste here"   />
+			<input type="submit" id="sendRaw" value="send"/>
+			
+			</article>
 			<script>
 				$('#sendRaw').click(function(e){
 					readHTML('send', {'cs':$('#raw').val() },null)					

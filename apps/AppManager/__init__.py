@@ -48,5 +48,7 @@ class AppManager(WebApp.WebApp):
 	def instanciable(self,app):
 		return   app in WebApp.selfies and WebApp.selfies[app]!=None
 	def HTML(self):
-		return """<div> <p>Welcome to <strong>ApplePi</strong> - Remotely controll your Pi ;) </p>
-			 <p> Start selecting an application from menu on the left.  </p> """
+		return """<article> <h2>Welcome to <strong>ApplePi</strong> </h2> <h3> Remotely use your Pi with this app system. </h3>
+			<h4> Start selecting an application from menu on the left! </h4> 
+			<p>PS: This is just a prototype, if you want to help, contribute (writing code),  please contact me at spocchio@gmail.com </p>
+</article>"""
