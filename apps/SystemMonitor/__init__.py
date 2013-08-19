@@ -25,9 +25,12 @@ class SystemMonitor(WebApp.WebApp):
 				return(line.split()[1:4])
 
 # Return % of CPU used by user as a character string                                
-	def getCPUuse(self):
-		return(str(os.popen("top -n1 | awk '/Cpu\(s\):/ {print $2}'").readline().strip(\
-	)))
+        def getCPUuse(self):
+                return(str(os.popen("top -n1 | awk '/Cpu\(s\):/ {print $2}'").readline().strip(\
+        )))
+        def getExternalDevices(self):
+                return(str(os.popen("df -h /media/* | grep -v /dev/root | tail -n +2").read().strip(\
+        )))
 	def getDevices(self):
 		return(str(os.popen("mount").readline().strip(\
 	)))
@@ -61,6 +64,8 @@ class SystemMonitor(WebApp.WebApp):
 		DISK_total = DISK_stats[0]
 		DISK_free = DISK_stats[1]
 		DISK_perc = DISK_stats[3]
+
+
 		
 		res=	"<article><h3>CPU</h3><p><b>Usage</b>:"+str(CPU_usage)+"</p>"
 		res+=	"<p><b>Temperature</b>:"+str(CPU_temp)+"</p></article>"
@@ -70,8 +75,9 @@ class SystemMonitor(WebApp.WebApp):
 		res+=	"<article><h3>Disk</h3><p><b>Total</b>:"+str(DISK_total)+"</p>"
 		res+=	"<p><b>Free</b>:"+str(DISK_free)+" ("
 		res+=	str(DISK_perc)+")</p></article>"
-		res+=   "<h3>System</h3><article><p><b>Time:</b>"+str(datetime.datetime.now())+"</p>"
-		#res+=   "<b>Mounted devices:</b>"+str(self.getDevices())+"</article>"
+		res+=   "<article><h3>System</h3><p><b>Time:</b>"+str(datetime.datetime.now())+"</p>"
+
+		res+=   "<b>Mounted devices:</b><pre>"+str(self.getExternalDevices())+"</pre></article>"
 		return res
 	def HTML(self):
 		#return "<div onload='readFrom(this,\"PiInfo\",\"infoHTML\",{})'></div>"
