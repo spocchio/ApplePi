@@ -16,31 +16,28 @@ All apps have:
  
 PS: This is a prototype, do not wait to contact me if you need help or, better, if you want to help me :D
 
-## Installation:
+## Installation & usage:
 
 you should installthe `web` python package, or just run
 
 	bash setup.bash
 
 This will also set up the local/public pair key for the SSL connection. For HTTPS you need the pyOpenSSL package.
-
 Please modify the user/password authentication pair in the file `config.json`. 
 
-## Usage:
-
-In the Raspberry execute:
+To execute the server, in the Raspberry execute:
 
 	python ApplePi.py
 
-In your favorite browser go to
+Then, in your favorite browser go to
 
 	http://ip_of_yor_pi/
 
-The default user is `pi` with password `gamma`
+***NOTE:*** The default user is ***pi*** with password ***gamma***
 
-## Writing your own app:
+## HOW TO: Writing your own app:
 
-#### How ApplePi works
+#### How ApplePi works?
 
 ApplePi is an HTTP RPC Server with an HTML/JS frontend, this mean that you can access every app directly throught an IP address, e.g.:
 
@@ -55,7 +52,7 @@ You can also pass parameters to the method of the apps, for example:
 will execute the method `echo(self, message = None)` inside the class `AppManager` and with the parameter `message` taken by the HTTP Request.
 
 
-### Hello World App
+#### A first example: the Hello World app
 
 The applications run by ApplePi are in the `apps` folder, each app stays in a different folder and a class with the same name should be defined in  `__init__.py` file.
 Each app class inherits from the class `WebApp` (stored in `ApplePi/WebApp.py`) which handle the `GET` and `POST`, the authentication and the file uploading.
@@ -78,8 +75,6 @@ you canseeyour app on
 or directly access on 
 
 	http://raspberry_pi/HelloWorld//HTML
-
-#### Returning HTML Data
 
 It is the `WebApp.WebApp` class that take the return of the called method and send it to your browser, since it is mainly an RPC Server, you can return any object, like:
 
@@ -114,13 +109,12 @@ to tell the class WebApp that you want to return only HTML stuff, just set the p
 
 You can access  this tiny app also browsing the HTML/JS client on http://raspberry_pi:8080/
 
-#### Using Javascript
+#### How to use Javascript in the app's front end  
 
-Let think you want to automatically update some fields you are showing, or to send an input to the server through the web interface,
+If you want to automatically update some fields you are showing, or to send an input to the server through the web interface,
 ApplePi has some javascript function, stored on `static/rpcberry.js` that let you do some AJAX in the front-end.
 
- * ***The `call` Javascript method***
-
+ * ***The `call` Javascript method***:
 	Parameters: `call(object,self,method,parameters,f)`
 
 	* object is the name of the app you want to execute
@@ -141,7 +135,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 			def HTML(self):
 				return """ <a href='#' onclick="call('HelloWorld','','now',{},function(x){alert(x)})"> click here to know the current time	""" 
 
- * ***the `read` Javascript method***
+ * ***the `read` Javascript method***:
 	the `read` function is bot trivial as the `call` function, because it don't ask for the object name and for the instance id as parameters.
 
 	Parameters: `read(method,parameters,f)`
@@ -163,7 +157,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 				return """ <a href='#' onclick="read(now',{},function(x){alert(x)})"> click here to know the current time	""" 
 
 
- * ***The `readHTML` JS method***
+ * ***The `readHTML` JS method***:
 	sometimes you want to just put the output of a method in a field, so use the readHTML method.
 	this is a less trivial method and you don't need to specify the application name and the instance id (it is implied you want to call a method of the current loaded app)
 
@@ -185,7 +179,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 			def HTML(self):
 				return """<b id ='b_field'></b> <a href='#' onclick="readHTML('now',{'hello_string':'Now is'},$('#b_field'))"> click here to update the current time	</a>""" 
 
- * ***the `reloadEvery` JS method:***
+ * ***the `reloadEvery` JS method***:
 	This is the definition of the function:
 
 		function reloadEvery(method,parmeters,idElem,t,f)
@@ -205,8 +199,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 					reloadEvery('now',{'hello_string':'Now is'},$('#b_field'),1000)
 				</script>""" 
 
- * ***Browsing local files with Javascript:***
-
+ * ***Browsing local files with Javascript***:
 	Sometimes you need to browse the files inside the Pi, to do it there is a trick that launch the jQuery-tree.
 	Here an example to download files from the Pi:
 
@@ -226,8 +219,8 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 
 	The function `fileBrowserFromHidden(this)` will generate a browser that will store the selected file name on the input type above.
 
- *  ***A simple example: download a file from the Pi***
-
+ *  ***A simple and useful example, download a file from the Pi***:
+Here there is the source I'll comment below.
 
 		import WebApp
 		import web
@@ -256,7 +249,6 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 				<iframe name="my_iframe" src="about:blank"></iframe>
 				"""
 
-
 	Notable stuff:
 
 	* Since the download of data is not made through AJAX I used an `<iframe>` where I redirect the `<form>` request. of the `HelloWorld.download(self,name)` method:
@@ -264,7 +256,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 	* to download large files you can't just return it content, you have to use a Generator, ApplePi supports it and the method `download` is a generator function that returns chunks of data
 	* I manually set the basedir `mediadir` to `~`, becouse at the moment there is no place where a global configuration is store.
 
-#### Caching data
+#### Making apps with advanced features: Caching data
 
 	You would like to receive an input from the user and to save it in memory, 
 	since ApplePi is made with web.py that re-instantiate the class everytime, the class `WebApp` gives you a variable called self.data
@@ -294,7 +286,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 				</script>""" 
 
 
-#### Uploading files
+#### Another useful example: Uploading files
 
 To upload a file you can't use ajax and you need a little workaround using the POST method you are forced to use a `<form>`.
 when a file is sent to a method from the `<form>`, the parameter of the function corresponding to the `<input type="upload/>`
@@ -327,7 +319,7 @@ This is an example:
 						<input type=file  name=filename />
 						</form>
 						<iframe name="my_iframe" src="about:blank"></iframe>	"""
-#### Multiple instances
+#### The last thing to know to make an app for ApplePi 
 
 Some thinGs you have to know:
  * As you can see you can open several instance of the web shell. You can try to reopen ApplePi in another browser and yet, there are the same instance of the web shells.
@@ -351,11 +343,7 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
 	
  * If you go to `http://raspberry_pi:8080/HelloWorld//` , then a number is returned and it is the instance ID (e.g. `123456678`), 
  * to open a particoular instance (e.g. `12345678`)go to: `http://raspberry_pi:8080/HelloWorld/12345678/HTML` 
- 
- 
-#### AppManager
-
-to have a list of the loaded applications and their instances go to:
+ * To have a list of the loaded applications and their instances go to:
 
 	http://raspberry_pi:8080/AppManager//appList
  
