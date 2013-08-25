@@ -221,7 +221,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 
 	The function `fileBrowserFromHidden(this)` will generate a browser that will store the selected file name on the input type above.
 
-#### A simple and useful example, download a file from the Pi***:
+#### A simple and useful example: Download a file from the Pi
 Here there is the source I'll comment below.
 
 	import WebApp
