@@ -32,6 +32,16 @@ function readHTML(method,parameters,ele,f){
 		}
 	);
 }
+
+function read(method,parameters,f){
+	call(currentApp,currentId,method,parameters,function(res) {
+		if(f!=undefined){
+			f(res)
+		}
+	});
+}
+
+
  function fileBrowser(ele,f){
 	 divo=$('<div style="border:1px solid black;background-color:white;padding:2px;border-radius:2px;" ></div>')
   $(ele).after(divo);
@@ -138,11 +148,17 @@ function readHTML(method,parameters,ele,f){
 	 callHTML(classe,method,parameter, function(res){ $(ele).html(res) } );
 	 
  }
-function reloadEvery(classe,self,method,parmeters,idElem,t,f){
+ 
+ function  reloadEvery(method,parmeters,idElem,t,f){
+			_reloadEvery(currentApp,currentId, method,parmeters,idElem,t,f)
+}
+
+ 
+function _reloadEvery(classe,self,method,parmeters,idElem,t,f){
 			setTimeout(function(){
 				readHTML(method,parmeters,idElem,f)
 				if(currentApp == classe && currentId == self){
-					reloadEvery(classe,self,method,parmeters,idElem,t,f)
+					_reloadEvery(classe,self,method,parmeters,idElem,t,f)
 					
 				}
 			},t)

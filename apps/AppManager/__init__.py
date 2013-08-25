@@ -45,6 +45,8 @@ class AppManager(WebApp.WebApp):
 	def instanceList(self,app):
 		if app in WebApp.selfies and WebApp.selfies[app]!=None : return WebApp.selfies[app].keys()
 		else: return []
+	def echo(self,message = None):
+		return 'received '+str(message)
 	def instanciable(self,app):
 		return   app in WebApp.selfies and WebApp.selfies[app]!=None
 	def HTML(self):
