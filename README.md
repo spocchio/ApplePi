@@ -40,7 +40,7 @@ The default user is `pi` with password `gamma`
 
 ## Writing your own app:
 
-### Introduction
+#### How ApplePi works
 
 ApplePi is an HTTP RPC Server with an HTML/JS frontend, this mean that you can access every app directly throught an IP address, e.g.:
 
@@ -79,7 +79,7 @@ or directly access on
 
 	http://raspberry_pi/HelloWorld//HTML
 
-### Returning HTML Data
+#### Returning HTML Data
 
 It is the `WebApp.WebApp` class that take the return of the called method and send it to your browser, since it is mainly an RPC Server, you can return any object, like:
 
@@ -114,185 +114,187 @@ to tell the class WebApp that you want to return only HTML stuff, just set the p
 
 You can access  this tiny app also browsing the HTML/JS client on http://raspberry_pi:8080/
 
-### Using Javascript
+#### Using Javascript
 
 Let think you want to automatically update some fields you are showing, or to send an input to the server through the web interface,
 ApplePi has some javascript function, stored on `static/rpcberry.js` that let you do some AJAX in the front-end.
 
-#### the call Javascript method
-Parameters: `call(object,self,method,parameters,f)`
+ * ***The `call` Javascript method***
 
-* object is the name of the app you want to execute
-* self is the instace id (because you can open multiple applications like the Shell, see the chapter ***Multiple Instances***), you can take it as an empty string at the moment 
-* method, is the method to call inside the object `object`.
-* parameters, the parameters of the function, have to stay in a dictionary, like `{'key':'value'}`
-* f, a callback called with the result of the function `method`
+	Parameters: `call(object,self,method,parameters,f)`
 
-for example: 
+	* object is the name of the app you want to execute
+	* self is the instace id (because you can open multiple applications like the Shell, see the chapter ***Multiple Instances***), you can take it as an empty string at the moment 
+	* method, is the method to call inside the object `object`.
+	* parameters, the parameters of the function, have to stay in a dictionary, like `{'key':'value'}`
+	* f, a callback called with the result of the function `method`
 
-	import WebApp
-	import datetime
-	
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		def now(self):
-			return datetime.datetime.now()
-		def HTML(self):
-			return """ <a href='#' onclick="call('HelloWorld','','now',{},function(x){alert(x)})"> click here to know the current time	""" 
+	for example: 
 
-#### the read Javascript method
-the `read` function is bot trivial as the `call` function, because it don't ask for the object name and for the instance id as parameters.
-
-Parameters: `read(method,parameters,f)`
-
-* method, is the method to call inside the object `object`.
-* parameters, the parameters of the function, have to stay in a dictionary, like `{'key':'value'}`
-* f, a callback called with the result of the function `method`
-
-for example: 
-
-	import WebApp
-	import datetime
-	
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		def now(self):
-			return datetime.datetime.now()
-		def HTML(self):
-			return """ <a href='#' onclick="read(now',{},function(x){alert(x)})"> click here to know the current time	""" 
-
-
-#### The readHTML JS method
-sometimes you want to just put the output of a method in a field, so use the readHTML method.
-this is a less trivial method and you don't need to specify the application name and the instance id (it is implied you want to call a method of the current loaded app)
-
-	function readHTML(method,parameters,ele,f)
-
-* method, is the function name of the currently opened app
-* parameters have to stay in a dictionary, like `{'key':'value'}`, if the function doesn't have parameters (if not `self`) then you can put `{}`
-* element in which put the result of the call
-* an optional callback function to handle the final result
-
-example:
-	import WebApp
-	import datetime
-
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		def now(self,hello_string):
-			return hello_string+' '+str(datetime.datetime.now())
-		def HTML(self):
-			return """<b id ='b_field'></b> <a href='#' onclick="readHTML('now',{'hello_string':'Now is'},$('#b_field'))"> click here to update the current time	</a>""" 
-
-#### the reloadEvery JS method :
-This is the definition of the function:
-
-	function reloadEvery(method,parmeters,idElem,t,f)
-
-it is like `readHTML` but takes also the `t` parameter that reload the element every `t` milliseconds
-
-	import WebApp
-	import datetime
-	
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		def now(self,hello_string):
-			return hello_string+' '+str(datetime.datetime.now())
-		def HTML(self):
-			return """<b id ='b_field'></b> 
-			<script>
-				reloadEvery('now',{'hello_string':'Now is'},$('#b_field'),1000)
-			</script>""" 
-
-### Caching data
-
-You would like to receive an input from the user and to save it in memory, 
-since ApplePi is made with web.py that re-instantiate the class everytime, the class `WebApp` gives you a variable called self.data
-which is a dict and is persistent!
-
-have a look here:
-
-	import WebApp
+		import WebApp
+		import datetime
 		
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			def now(self):
+				return datetime.datetime.now()
+			def HTML(self):
+				return """ <a href='#' onclick="call('HelloWorld','','now',{},function(x){alert(x)})"> click here to know the current time	""" 
 
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		def store(self,message = None):
-			self.data['storage'] = message
-		def load(self):
-			if 'storage' in self.data: return self.data['storage']
-			
-		def HTML(self):
-			return """ data stored:<b id ='b_field'></b> <br/>
-			send data: <input id ="input_field" > <input type=submit id ="submit_field">
-			<script>
-				reloadEvery('load',{},$('#b_field'),1000)
-				$('#submit_field').click(function(){
-					read('store',{'message':$('#input_field').val()})
-					return false;
-				})
-			</script>""" 
+ * ***the `read` Javascript method***
+	the `read` function is bot trivial as the `call` function, because it don't ask for the object name and for the instance id as parameters.
 
-#### Browsing local files:
+	Parameters: `read(method,parameters,f)`
 
-Sometimes you need to browse the files inside the Pi, to do it there is a trick that launch the jQuery-tree.
-Here an example to download files from the Pi:
+	* method, is the method to call inside the object `object`.
+	* parameters, the parameters of the function, have to stay in a dictionary, like `{'key':'value'}`
+	* f, a callback called with the result of the function `method`
 
-	import WebApp
+	for example: 
+
+		import WebApp
+		import datetime
 		
-
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		def store(self,message = None):
-			self.data['storage'] = message
-		def load(self):
-			if 'storage' in self.data: return self.data['storage']
-			
-		def HTML(self):
-			return """First of all <b>click</b> this input to select a folder or a file to work with:
-					<input id="browse" type=text placeholder="Click to browse" name=mfile onclick='fileBrowserFromHidden(this); return false'>"""
-
-The function `fileBrowserFromHidden(this)` will generate a browser that will store the selected file name on the input type above.
-
-#### A simple example: download a file from the Pi
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			def now(self):
+				return datetime.datetime.now()
+			def HTML(self):
+				return """ <a href='#' onclick="read(now',{},function(x){alert(x)})"> click here to know the current time	""" 
 
 
-	import WebApp
-	import web
+ * ***The `readHTML` JS method***
+	sometimes you want to just put the output of a method in a field, so use the readHTML method.
+	this is a less trivial method and you don't need to specify the application name and the instance id (it is implied you want to call a method of the current loaded app)
+
+		function readHTML(method,parameters,ele,f)
+
+	* method, is the function name of the currently opened app
+	* parameters have to stay in a dictionary, like `{'key':'value'}`, if the function doesn't have parameters (if not `self`) then you can put `{}`
+	* element in which put the result of the call
+	* an optional callback function to handle the final result
+
+	example:
+		import WebApp
+		import datetime
+
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			def now(self,hello_string):
+				return hello_string+' '+str(datetime.datetime.now())
+			def HTML(self):
+				return """<b id ='b_field'></b> <a href='#' onclick="readHTML('now',{'hello_string':'Now is'},$('#b_field'))"> click here to update the current time	</a>""" 
+
+ * ***the `reloadEvery` JS method:***
+	This is the definition of the function:
+
+		function reloadEvery(method,parmeters,idElem,t,f)
+
+	it is like `readHTML` but takes also the `t` parameter that reload the element every `t` milliseconds
+
+		import WebApp
+		import datetime
 		
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			def now(self,hello_string):
+				return hello_string+' '+str(datetime.datetime.now())
+			def HTML(self):
+				return """<b id ='b_field'></b> 
+				<script>
+					reloadEvery('now',{'hello_string':'Now is'},$('#b_field'),1000)
+				</script>""" 
 
-	class HelloWorld(WebApp.WebApp):
-		isHTML = True
-		mediadir = os.path.expanduser('~')        
-		def download(self, filename = None,action = None):
+ * ***Browsing local files with Javascript:***
+
+	Sometimes you need to browse the files inside the Pi, to do it there is a trick that launch the jQuery-tree.
+	Here an example to download files from the Pi:
+
+		import WebApp
 			
-			if filename != None:	
-				with  open(self.mediadir+filename) as f:
-					web.header('Content-Disposition', 'attachment; filename="' + os.path.basename(filename) + '"')
-					while True:
-						data = f.read(1024)
-						if not data:
-							return
-						yield data
-		def HTML(self):
-			return """
-				<form method="POST"  enctype="multipart/form-data" action="/HelloWorld//download" target="my_iframe">
-					Click this input to select a folder or a file to work with:
-					<input type=text placeholder="Click to browse" name=filename onclick='fileBrowserFromHidden(this); return false'>
-					<input type=submit name=action value="Download the selected file"/>
-				</form>
-			<iframe name="my_iframe" src="about:blank"></iframe>
-			"""
+
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			def store(self,message = None):
+				self.data['storage'] = message
+			def load(self):
+				if 'storage' in self.data: return self.data['storage']
+				
+			def HTML(self):
+				return """First of all <b>click</b> this input to select a folder or a file to work with:
+						<input id="browse" type=text placeholder="Click to browse" name=mfile onclick='fileBrowserFromHidden(this); return false'>"""
+
+	The function `fileBrowserFromHidden(this)` will generate a browser that will store the selected file name on the input type above.
+
+ *  ***A simple example: download a file from the Pi***
 
 
-Notable stuff:
+		import WebApp
+		import web
+			
 
-* Since the download of data is not made through AJAX I used an `<iframe>` where I redirect the `<form>` request. of the `HelloWorld.download(self,name)` method:
-* I imported `web` to modify the  header
-* to download large files you can't just return it content, you have to use a Generator, ApplePi supports it and the method `download` is a generator function that returns chunks of data
-* I manually set the basedir `mediadir` to `~`, becouse at the moment there is no place where a global configuration is store.
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			mediadir = os.path.expanduser('~')        
+			def download(self, filename = None,action = None):
+				
+				if filename != None:	
+					with  open(self.mediadir+filename) as f:
+						web.header('Content-Disposition', 'attachment; filename="' + os.path.basename(filename) + '"')
+						while True:
+							data = f.read(1024)
+							if not data:
+								return
+							yield data
+			def HTML(self):
+				return """
+					<form method="POST"  enctype="multipart/form-data" action="/HelloWorld//download" target="my_iframe">
+						Click this input to select a folder or a file to work with:
+						<input type=text placeholder="Click to browse" name=filename onclick='fileBrowserFromHidden(this); return false'>
+						<input type=submit name=action value="Download the selected file"/>
+					</form>
+				<iframe name="my_iframe" src="about:blank"></iframe>
+				"""
 
-### Uploading files
+
+	Notable stuff:
+
+	* Since the download of data is not made through AJAX I used an `<iframe>` where I redirect the `<form>` request. of the `HelloWorld.download(self,name)` method:
+	* I imported `web` to modify the  header
+	* to download large files you can't just return it content, you have to use a Generator, ApplePi supports it and the method `download` is a generator function that returns chunks of data
+	* I manually set the basedir `mediadir` to `~`, becouse at the moment there is no place where a global configuration is store.
+
+#### Caching data
+
+	You would like to receive an input from the user and to save it in memory, 
+	since ApplePi is made with web.py that re-instantiate the class everytime, the class `WebApp` gives you a variable called self.data
+	which is a dict and is persistent!
+
+	have a look here:
+
+		import WebApp
+			
+
+		class HelloWorld(WebApp.WebApp):
+			isHTML = True
+			def store(self,message = None):
+				self.data['storage'] = message
+			def load(self):
+				if 'storage' in self.data: return self.data['storage']
+				
+			def HTML(self):
+				return """ data stored:<b id ='b_field'></b> <br/>
+				send data: <input id ="input_field" > <input type=submit id ="submit_field">
+				<script>
+					reloadEvery('load',{},$('#b_field'),1000)
+					$('#submit_field').click(function(){
+						read('store',{'message':$('#input_field').val()})
+						return false;
+					})
+				</script>""" 
+
+
+#### Uploading files
 
 To upload a file you can't use ajax and you need a little workaround using the POST method you are forced to use a `<form>`.
 when a file is sent to a method from the `<form>`, the parameter of the function corresponding to the `<input type="upload/>`
@@ -325,7 +327,7 @@ This is an example:
 						<input type=file  name=filename />
 						</form>
 						<iframe name="my_iframe" src="about:blank"></iframe>	"""
-### Multiple instances
+#### Multiple instances
 
 Some thinGs you have to know:
  * As you can see you can open several instance of the web shell. You can try to reopen ApplePi in another browser and yet, there are the same instance of the web shells.
@@ -351,7 +353,7 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
  * to open a particoular instance (e.g. `12345678`)go to: `http://raspberry_pi:8080/HelloWorld/12345678/HTML` 
  
  
-### AppManager
+#### AppManager
 
 to have a list of the loaded applications and their instances go to:
 
