@@ -329,7 +329,7 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
  * To let your app be multi-instantiable, add a flag `keepInstance=True`
  * You may access a particoular instance `INSTANCE_ID` of a class by the url `http://raspberry_pi:8080/HelloWorld/INSTANCE_ID/`.
  
- Here an example:
+Here an example:
 
 	import WebApp 
 	class HelloWorld(WebApp.WebApp):
@@ -344,8 +344,8 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
  * If you go to `http://raspberry_pi:8080/HelloWorld//` , then a number is returned and it is the instance ID (e.g. `123456678`), 
  * to open a particoular instance (e.g. `12345678`)go to: `http://raspberry_pi:8080/HelloWorld/12345678/HTML` 
  * To have a list of the loaded applications and their instances go to:
-
-	http://raspberry_pi:8080/AppManager//appList
+ 
+		http://raspberry_pi:8080/AppManager//appList
  
 ## Screenshots:
 
