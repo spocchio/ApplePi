@@ -35,7 +35,7 @@ Then, in your favorite browser go to
 
 ***NOTE:*** The default user is ***pi*** with password ***gamma***
 
-## HOW TO: Writing your own app:
+## HOW TO Writing your own app:
 
 #### How ApplePi works?
 
@@ -75,6 +75,8 @@ you canseeyour app on
 or directly access on 
 
 	http://raspberry_pi/HelloWorld//HTML
+
+#### A second example: a simple modification to the Hello World app
 
 It is the `WebApp.WebApp` class that take the return of the called method and send it to your browser, since it is mainly an RPC Server, you can return any object, like:
 
