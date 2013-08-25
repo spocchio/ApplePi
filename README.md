@@ -120,7 +120,7 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 	Parameters: `call(object,self,method,parameters,f)`
 
 	* object is the name of the app you want to execute
-	* self is the instace id (because you can open multiple applications like the Shell, see the chapter ***Multiple Instances***), you can take it as an empty string at the moment 
+	* self is the instace id (because you can open multiple applications like the Shell, see the sub-chapter ***Multiple initialization***), you can take it as an empty string at the moment 
 	* method, is the method to call inside the object `object`.
 	* parameters, the parameters of the function, have to stay in a dictionary, like `{'key':'value'}`
 	* f, a callback called with the result of the function `method`
@@ -221,42 +221,41 @@ ApplePi has some javascript function, stored on `static/rpcberry.js` that let yo
 
 	The function `fileBrowserFromHidden(this)` will generate a browser that will store the selected file name on the input type above.
 
- *  ***A simple and useful example, download a file from the Pi***:
+#### A simple and useful example, download a file from the Pi***:
 Here there is the source I'll comment below.
 
-		import WebApp
-		import web
-			
-
+	import WebApp
+	import web
+		
 		class HelloWorld(WebApp.WebApp):
-			isHTML = True
-			mediadir = os.path.expanduser('~')        
-			def download(self, filename = None,action = None):
-				
-				if filename != None:	
-					with  open(self.mediadir+filename) as f:
-						web.header('Content-Disposition', 'attachment; filename="' + os.path.basename(filename) + '"')
-						while True:
-							data = f.read(1024)
-							if not data:
-								return
-							yield data
-			def HTML(self):
-				return """
-					<form method="POST"  enctype="multipart/form-data" action="/HelloWorld//download" target="my_iframe">
-						Click this input to select a folder or a file to work with:
-						<input type=text placeholder="Click to browse" name=filename onclick='fileBrowserFromHidden(this); return false'>
-						<input type=submit name=action value="Download the selected file"/>
-					</form>
-				<iframe name="my_iframe" src="about:blank"></iframe>
-				"""
+		isHTML = True
+		mediadir = os.path.expanduser('~')        
+		def download(self, filename = None,action = None):
+			
+			if filename != None:	
+				with  open(self.mediadir+filename) as f:
+					web.header('Content-Disposition', 'attachment; filename="' + os.path.basename(filename) + '"')
+					while True:
+						data = f.read(1024)
+						if not data:
+							return
+						yield data
+		def HTML(self):
+			return """
+				<form method="POST"  enctype="multipart/form-data" action="/HelloWorld//download" target="my_iframe">
+					Click this input to select a folder or a file to work with:
+					<input type=text placeholder="Click to browse" name=filename onclick='fileBrowserFromHidden(this); return false'>
+					<input type=submit name=action value="Download the selected file"/>
+				</form>
+			<iframe name="my_iframe" src="about:blank"></iframe>
+			"""
 
-	Notable stuff:
+Notable stuff:
 
-	* Since the download of data is not made through AJAX I used an `<iframe>` where I redirect the `<form>` request. of the `HelloWorld.download(self,name)` method:
-	* I imported `web` to modify the  header
-	* to download large files you can't just return it content, you have to use a Generator, ApplePi supports it and the method `download` is a generator function that returns chunks of data
-	* I manually set the basedir `mediadir` to `~`, becouse at the moment there is no place where a global configuration is store.
+* Since the download of data is not made through AJAX I used an `<iframe>` where I redirect the `<form>` request. of the `HelloWorld.download(self,name)` method:
+* I imported `web` to modify the  header
+* to download large files you can't just return it content, you have to use a Generator, ApplePi supports it and the method `download` is a generator function that returns chunks of data
+* I manually set the basedir `mediadir` to `~`, becouse at the moment there is no place where a global configuration is store.
 
 #### Making apps with advanced features: Caching data
 
@@ -321,7 +320,7 @@ This is an example:
 						<input type=file  name=filename />
 						</form>
 						<iframe name="my_iframe" src="about:blank"></iframe>	"""
-#### The last thing to know to make an app for ApplePi 
+#### The last thing to know to create an app for ApplePi:  Multiple initialization
 
 Some thinGs you have to know:
  * As you can see you can open several instance of the web shell. You can try to reopen ApplePi in another browser and yet, there are the same instance of the web shells.
@@ -331,10 +330,10 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
  * You may access a particoular instance `INSTANCE_ID` of a class by the url `http://raspberry_pi:8080/HelloWorld/INSTANCE_ID/`.
  
  Here an example:
- 
+
+
 	import WebApp 
 		
-
 	class HelloWorld(WebApp.WebApp):
 		isHTML = True
 		keepInstance=True
@@ -342,7 +341,8 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
 			if not 'hits' in self.data: self.data['hits'] = 0
 			self.data['hits']+=1
 			return """	you hit me %s times """ % self.data['hits']
-	
+
+
  * If you go to `http://raspberry_pi:8080/HelloWorld//` , then a number is returned and it is the instance ID (e.g. `123456678`), 
  * to open a particoular instance (e.g. `12345678`)go to: `http://raspberry_pi:8080/HelloWorld/12345678/HTML` 
  * To have a list of the loaded applications and their instances go to:
