@@ -319,6 +319,7 @@ This is an example:
 						<input type=file  name=filename />
 						</form>
 						<iframe name="my_iframe" src="about:blank"></iframe>	"""
+
 #### The last thing to know to create an app for ApplePi:  Multiple initialization
 
 Some thinGs you have to know:
@@ -330,9 +331,7 @@ This is the many idea of ApplePi: access from every where your Pi, and, if I sta
  
  Here an example:
 
-
 	import WebApp 
-		
 	class HelloWorld(WebApp.WebApp):
 		isHTML = True
 		keepInstance=True
