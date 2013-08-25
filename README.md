@@ -226,8 +226,8 @@ Here there is the source I'll comment below.
 
 	import WebApp
 	import web
-		
-		class HelloWorld(WebApp.WebApp):
+	
+	class HelloWorld(WebApp.WebApp):
 		isHTML = True
 		mediadir = os.path.expanduser('~')        
 		def download(self, filename = None,action = None):
@@ -259,32 +259,31 @@ Notable stuff:
 
 #### Making apps with advanced features: Caching data
 
-	You would like to receive an input from the user and to save it in memory, 
-	since ApplePi is made with web.py that re-instantiate the class everytime, the class `WebApp` gives you a variable called self.data
-	which is a dict and is persistent!
+You would like to receive an input from the user and to save it in memory, 
+since ApplePi is made with web.py that re-instantiate the class everytime, the class `WebApp` gives you a variable called self.data
+which is a dict and is persistent!
 
-	have a look here:
+have a look here:
 
-		import WebApp
+	import WebApp
+		
+	class HelloWorld(WebApp.WebApp):
+		isHTML = True
+		def store(self,message = None):
+			self.data['storage'] = message
+		def load(self):
+			if 'storage' in self.data: return self.data['storage']
 			
-
-		class HelloWorld(WebApp.WebApp):
-			isHTML = True
-			def store(self,message = None):
-				self.data['storage'] = message
-			def load(self):
-				if 'storage' in self.data: return self.data['storage']
-				
-			def HTML(self):
-				return """ data stored:<b id ='b_field'></b> <br/>
-				send data: <input id ="input_field" > <input type=submit id ="submit_field">
-				<script>
-					reloadEvery('load',{},$('#b_field'),1000)
-					$('#submit_field').click(function(){
-						read('store',{'message':$('#input_field').val()})
-						return false;
-					})
-				</script>""" 
+		def HTML(self):
+			return """ data stored:<b id ='b_field'></b> <br/>
+			send data: <input id ="input_field" > <input type=submit id ="submit_field">
+			<script>
+				reloadEvery('load',{},$('#b_field'),1000)
+				$('#submit_field').click(function(){
+					read('store',{'message':$('#input_field').val()})
+					return false;
+				})
+			</script>""" 
 
 
 #### Another useful example: Uploading files
