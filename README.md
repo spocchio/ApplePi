@@ -354,4 +354,9 @@ The web shell:
 The remote OMXPlayer:
 ![OMXPlayer remote ](https://lh6.googleusercontent.com/-OOqnpsHqdbk/UhInDESbsCI/AAAAAAAAAmE/89ME6P29IKc/s800/apple_omx.png)
 
+## About:
+Author: **Antonio Ragagnin**
+
+If you want to contribute, or just have more information, you can contact me at **spocchio** at **gmail** dot **com**.
+
 
